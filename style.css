@@ -342,7 +342,8 @@
     .current-info {
       display: flex;
       align-items: center;
-      gap: 20px;
+      justify-content: center;
+      gap: 6px;
     }
 
     .current-icon {
