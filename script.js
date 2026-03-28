@@ -124,8 +124,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const API_KEY = "Ttm47EBYkievqyxTaJhWrJVEW9GgNjM6ib2GcpY0";
 
-  async function fetchWeather(lat, lon, unit) {}
-
   async function fetchGeoLocation(city) {
     let url = `https://api.api-ninjas.com/v1/geocoding?city=${city}`;
     const response = await fetch(url, { headers: { "X-Api-Key": API_KEY } });
@@ -133,28 +131,55 @@ document.addEventListener("DOMContentLoaded", async () => {
     return data;
   }
 
-  function update() {}
+  async function fetchWeather(lat, lon, unit) {
+    let url = ``;
+    if (unit === "celsius") {
+      url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation`;
+    } else {
+      url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch`;
+    }
+    const response = await fetch(url);
+    const data = response.json();
+    return data;
+  }
 
   searchButton.addEventListener("click", async () => {
     let cityName = searchBox.value.trim();
     let unit = dropdownUnits.value;
     let geoCoding;
+    let weatherData;
+
+    searchBox.value = "";
 
     dropdownUnits.addEventListener("change", (event) => {
       unit = event.target.value;
       console.log("Temperature unit is changed to: ", unit);
     });
 
-    console.log("Temperature unit: ", unit);
-    console.log("Weather of the city: ", cityName);
-
     try {
       geoCoding = await fetchGeoLocation(cityName);
     } catch (error) {
       console.error("Unable to fetch GeoLocation");
     }
-    console.log(geoCoding);
 
-    update();
+    cityName = geoCoding[0].name;
+    let latitude = geoCoding[0].latitude;
+    let longitude = geoCoding[0].longitude;
+    let country = geoCoding[0].country;
+
+    console.log("Temperature unit: ", unit);
+    console.log("Weather of the city: ", cityName);
+    console.log("Latitude: ", latitude);
+    console.log("Longitude: ", longitude);
+
+    try {
+      weatherData = await fetchWeather(latitude, longitude, unit);
+    } catch (error) {
+      console.error("Unable to fetch Weather data");
+    }
+
+    console.log(weatherData);
+
+    update(cityName, country);
   });
 });
