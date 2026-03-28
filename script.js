@@ -84,9 +84,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   );
 
   //Hourly Forecast section
-  let hourlyForecastDropdown = document.getElementById(
-    "hourly-forecast-dropdown",
-  );
 
   //Icon
   let hourlyForecastIcon1 = document.getElementById(
