@@ -112,6 +112,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     "hourly-forecast-panel-icon-8",
   );
 
+  //Time
+  let hourlyForecastTime1 = document.getElementById(
+    "hourly-forecast-panel-time-1",
+  );
+  let hourlyForecastTime2 = document.getElementById(
+    "hourly-forecast-panel-time-2",
+  );
+  let hourlyForecastTime3 = document.getElementById(
+    "hourly-forecast-panel-time-3",
+  );
+  let hourlyForecastTime4 = document.getElementById(
+    "hourly-forecast-panel-time-4",
+  );
+  let hourlyForecastTime5 = document.getElementById(
+    "hourly-forecast-panel-time-5",
+  );
+  let hourlyForecastTime6 = document.getElementById(
+    "hourly-forecast-panel-time-6",
+  );
+  let hourlyForecastTime7 = document.getElementById(
+    "hourly-forecast-panel-time-7",
+  );
+  let hourlyForecastTime8 = document.getElementById(
+    "hourly-forecast-panel-time-8",
+  );
+
   //Temperature
   let hourlyForecastTemp1 = document.getElementById("hourly-forecast-temp-1");
   let hourlyForecastTemp2 = document.getElementById("hourly-forecast-temp-2");
@@ -141,6 +167,188 @@ document.addEventListener("DOMContentLoaded", async () => {
     const response = await fetch(url);
     const data = response.json();
     return data;
+  }
+
+  function dateAndTime() {
+    const currentTime = new Date();
+
+    let date = currentTime.getDate();
+    let month = currentTime.getMonth();
+    let year = currentTime.getFullYear();
+    let day = currentTime.getDay();
+
+    switch (month) {
+      case 0:
+        month = "Jan";
+        break;
+
+      case 1:
+        month = "Feb";
+        break;
+
+      case 2:
+        month = "Mar";
+        break;
+
+      case 3:
+        month = "Apr";
+        break;
+
+      case 4:
+        month = "May";
+        break;
+
+      case 5:
+        month = "Jun";
+        break;
+
+      case 6:
+        month = "Jul";
+        break;
+
+      case 7:
+        month = "Aug";
+        break;
+
+      case 8:
+        month = "Sep";
+        break;
+
+      case 9:
+        month = "Oct";
+        break;
+
+      case 10:
+        month = "Nov";
+        break;
+
+      case 11:
+        month = "Dec";
+        break;
+    }
+
+    switch (day) {
+      case 0:
+        day = "Sunday";
+        break;
+
+      case 1:
+        day = "Monday";
+        break;
+
+      case 2:
+        day = "Tuesday";
+        break;
+
+      case 3:
+        day = "Wednesday";
+        break;
+
+      case 4:
+        day = "Thursday";
+        break;
+
+      case 5:
+        day = "Friday";
+        break;
+
+      case 6:
+        day = "Saturday";
+        break;
+    }
+
+    let dateDisplay = {
+      date: date,
+      month: month,
+      year: year,
+      day: day,
+    };
+
+    return dateDisplay;
+  }
+
+  function update(city, country, weather) {
+    let cityDisplay = `${city}, ${country}`;
+    let dateDisplay = dateAndTime();
+
+    CurrentCityName.textContent = cityDisplay;
+    currentDate.textContent = `${dateDisplay.day}, ${dateDisplay.month} ${dateDisplay.date}, ${dateDisplay.year}`;
+    currentTemp.textContent = weather.current.temperature_2m;
+    currentFeelsLike.textContent = weather.current.apparent_temperature;
+    currentHumidity.textContent = weather.current.relative_humidity_2m;
+    currentWind.textContent = weather.current.wind_speed_10m;
+    currentPrecipitation = weather.current.precipitation;
+
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    let todayIndex = new Date().getDay();
+    dailyForecastDayName1.textContent = dayNames[todayIndex];
+    dailyForecastDayName2.textContent = dayNames[(todayIndex + 1) % 7];
+    dailyForecastDayName3.textContent = dayNames[(todayIndex + 2) % 7];
+    dailyForecastDayName4.textContent = dayNames[(todayIndex + 3) % 7];
+    dailyForecastDayName5.textContent = dayNames[(todayIndex + 4) % 7];
+    dailyForecastDayName6.textContent = dayNames[(todayIndex + 5) % 7];
+    dailyForecastDayName7.textContent = dayNames[(todayIndex + 6) % 7];
+
+    dailyForecastTempHigh1.textContent = weather.daily.temperature_2m_max[0];
+    dailyForecastTempHigh2.textContent = weather.daily.temperature_2m_max[1];
+    dailyForecastTempHigh3.textContent = weather.daily.temperature_2m_max[2];
+    dailyForecastTempHigh4.textContent = weather.daily.temperature_2m_max[3];
+    dailyForecastTempHigh5.textContent = weather.daily.temperature_2m_max[4];
+    dailyForecastTempHigh6.textContent = weather.daily.temperature_2m_max[5];
+    dailyForecastTempHigh7.textContent = weather.daily.temperature_2m_max[6];
+
+    dailyForecastTempLow1.textContent = weather.daily.temperature_2m_min[0];
+    dailyForecastTempLow2.textContent = weather.daily.temperature_2m_min[1];
+    dailyForecastTempLow3.textContent = weather.daily.temperature_2m_min[2];
+    dailyForecastTempLow4.textContent = weather.daily.temperature_2m_min[3];
+    dailyForecastTempLow5.textContent = weather.daily.temperature_2m_min[4];
+    dailyForecastTempLow6.textContent = weather.daily.temperature_2m_min[5];
+    dailyForecastTempLow7.textContent = weather.daily.temperature_2m_min[6];
+
+    const hourlyTime = [
+      "12AM",
+      "1AM",
+      "2AM",
+      "3AM",
+      "4AM",
+      "5AM",
+      "6AM",
+      "7AM",
+      "8AM",
+      "9AM",
+      "10AM",
+      "11AM",
+      "12PM",
+      "1PM",
+      "2PM",
+      "3PM",
+      "4PM",
+      "5PM",
+      "6PM",
+      "7PM",
+      "8PM",
+      "9PM",
+      "10PM",
+      "11PM",
+    ];
+    let currentHour = new Date().getHours();
+    hourlyForecastTime1.textContent = hourlyTime[currentHour % 24];
+    hourlyForecastTime2.textContent = hourlyTime[(currentHour + 1) % 24];
+    hourlyForecastTime3.textContent = hourlyTime[(currentHour + 2) % 24];
+    hourlyForecastTime4.textContent = hourlyTime[(currentHour + 3) % 24];
+    hourlyForecastTime5.textContent = hourlyTime[(currentHour + 4) % 24];
+    hourlyForecastTime6.textContent = hourlyTime[(currentHour + 5) % 24];
+    hourlyForecastTime7.textContent = hourlyTime[(currentHour + 6) % 24];
+    hourlyForecastTime8.textContent = hourlyTime[(currentHour + 7) % 24];
+
+    hourlyForecastTemp1.textContent = weather.hourly.temperature_2m[0];
+    hourlyForecastTemp2.textContent = weather.hourly.temperature_2m[1];
+    hourlyForecastTemp3.textContent = weather.hourly.temperature_2m[2];
+    hourlyForecastTemp4.textContent = weather.hourly.temperature_2m[3];
+    hourlyForecastTemp5.textContent = weather.hourly.temperature_2m[4];
+    hourlyForecastTemp6.textContent = weather.hourly.temperature_2m[5];
+    hourlyForecastTemp7.textContent = weather.hourly.temperature_2m[6];
+    hourlyForecastTemp8.textContent = weather.hourly.temperature_2m[7];
   }
 
   searchButton.addEventListener("click", async () => {
@@ -180,6 +388,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     console.log(weatherData);
 
-    update(cityName, country);
+    update(cityName, country, weatherData);
   });
 });
