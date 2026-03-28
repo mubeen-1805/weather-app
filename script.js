@@ -1,7 +1,7 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   //Header section
   let dropdownUnits = document.getElementById("dropdown-units");
-  let searchBox = document.getElementById("search");
+  let searchBox = document.getElementById("search-box");
 
   // Hero section
   let searchButton = document.getElementById("search-button");
@@ -121,4 +121,40 @@ document.addEventListener("DOMContentLoaded", () => {
   let hourlyForecastTemp6 = document.getElementById("hourly-forecast-temp-6");
   let hourlyForecastTemp7 = document.getElementById("hourly-forecast-temp-7");
   let hourlyForecastTemp8 = document.getElementById("hourly-forecast-temp-8");
+
+  const API_KEY = "Ttm47EBYkievqyxTaJhWrJVEW9GgNjM6ib2GcpY0";
+
+  async function fetchWeather(lat, lon, unit) {}
+
+  async function fetchGeoLocation(city) {
+    let url = `https://api.api-ninjas.com/v1/geocoding?city=${city}`;
+    const response = await fetch(url, { headers: { "X-Api-Key": API_KEY } });
+    const data = response.json();
+    return data;
+  }
+
+  function update() {}
+
+  searchButton.addEventListener("click", async () => {
+    let cityName = searchBox.value.trim();
+    let unit = dropdownUnits.value;
+    let geoCoding;
+
+    dropdownUnits.addEventListener("change", (event) => {
+      unit = event.target.value;
+      console.log("Temperature unit is changed to: ", unit);
+    });
+
+    console.log("Temperature unit: ", unit);
+    console.log("Weather of the city: ", cityName);
+
+    try {
+      geoCoding = await fetchGeoLocation(cityName);
+    } catch (error) {
+      console.error("Unable to fetch GeoLocation");
+    }
+    console.log(geoCoding);
+
+    update();
+  });
 });
