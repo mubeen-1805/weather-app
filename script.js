@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   let currentHumidity = document.getElementById("humidity");
   let currentWind = document.getElementById("wind");
   let currentPrecipitation = document.getElementById("precipitation");
+  let currentWindUnit = document.getElementById("wind-unit");
+  let currentPrecipitationUnit = document.getElementById("precipitation-unit");
 
   /* Daily Forecast section */
   //Day name
@@ -150,6 +152,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const API_KEY = "Ttm47EBYkievqyxTaJhWrJVEW9GgNjM6ib2GcpY0";
 
+  let unit = "celsius";
+  let geoCoding;
+  let weatherData;
+  let currentLat;
+  let currentLon;
+  let currentCity;
+  let currentCountry;
+
   async function fetchGeoLocation(city) {
     let url = `https://api.api-ninjas.com/v1/geocoding?city=${city}`;
     const response = await fetch(url, { headers: { "X-Api-Key": API_KEY } });
@@ -277,7 +287,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     currentFeelsLike.textContent = weather.current.apparent_temperature;
     currentHumidity.textContent = weather.current.relative_humidity_2m;
     currentWind.textContent = weather.current.wind_speed_10m;
-    currentPrecipitation = weather.current.precipitation;
+    currentPrecipitation.textContent = weather.current.precipitation;
+
+    if (unit === "fahrenheit") {
+      currentWindUnit.textContent = "mph";
+      currentPrecipitationUnit.textContent = "inch";
+    }
 
     const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     let todayIndex = new Date().getDay();
@@ -353,16 +368,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   searchButton.addEventListener("click", async () => {
     let cityName = searchBox.value.trim();
-    let unit = dropdownUnits.value;
-    let geoCoding;
-    let weatherData;
 
     searchBox.value = "";
-
-    dropdownUnits.addEventListener("change", (event) => {
-      unit = event.target.value;
-      console.log("Temperature unit is changed to: ", unit);
-    });
 
     try {
       geoCoding = await fetchGeoLocation(cityName);
@@ -370,24 +377,36 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("Unable to fetch GeoLocation");
     }
 
-    cityName = geoCoding[0].name;
-    let latitude = geoCoding[0].latitude;
-    let longitude = geoCoding[0].longitude;
-    let country = geoCoding[0].country;
+    currentCity = geoCoding[0].name;
+    currentLat = geoCoding[0].latitude;
+    currentLon = geoCoding[0].longitude;
+    currentCountry = geoCoding[0].country;
 
     console.log("Temperature unit: ", unit);
-    console.log("Weather of the city: ", cityName);
-    console.log("Latitude: ", latitude);
-    console.log("Longitude: ", longitude);
+    console.log("Weather of the city: ", currentCity);
+    console.log("Latitude: ", currentLat);
+    console.log("Longitude: ", currentLon);
 
     try {
-      weatherData = await fetchWeather(latitude, longitude, unit);
+      weatherData = await fetchWeather(currentLat, currentLon, unit);
     } catch (error) {
       console.error("Unable to fetch Weather data");
     }
 
     console.log(weatherData);
 
-    update(cityName, country, weatherData);
+    update(currentCity, currentCountry, weatherData);
+  });
+
+  dropdownUnits.addEventListener("change", async () => {
+    unit = dropdownUnits.value;
+    if (currentLat !== null && currentLon !== null) {
+      try {
+        weatherData = await fetchWeather(currentLat, currentLon, unit);
+        update(currentCity, currentCountry, weatherData);
+      } catch (error) {
+        console.error("Unable to update weather data after unit change");
+      }
+    }
   });
 });
