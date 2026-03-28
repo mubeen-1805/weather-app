@@ -167,9 +167,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function fetchWeather(lat, lon, unit) {
     let url = ``;
     if (unit === "celsius") {
-      url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation`;
+      url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation,is_day`;
     } else {
-      url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch`;
+      url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation,is_day&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch`;
     }
     const response = await fetch(url);
     const data = response.json();
@@ -274,6 +274,56 @@ document.addEventListener("DOMContentLoaded", async () => {
     return dateDisplay;
   }
 
+  function iconPathFinder(weatherCode, isDay) {
+    let iconPath;
+
+    if (weatherCode === 0) {
+      if (isDay === 0) {
+        iconPath = "./assets/images/icon-clear-night.webp";
+      } else {
+        iconPath = "./assets/images/icon-sunny.webp";
+      }
+    } else if (weatherCode === 1 || weatherCode === 2) {
+      iconPath = "./assets/images/icon-partly-cloudy.webp";
+    } else if (weatherCode === 3) {
+      iconPath = "./assets/images/icon-overcast.webp";
+    } else if (weatherCode === 45 || weatherCode === 48) {
+      iconPath = "./assets/images/icon-fog.webp";
+    } else if (
+      weatherCode === 51 ||
+      weatherCode === 53 ||
+      weatherCode === 55 ||
+      weatherCode === 56 ||
+      weatherCode === 57
+    ) {
+      iconPath = "./assets/images/icon-drizzle.webp";
+    } else if (
+      weatherCode === 61 ||
+      weatherCode === 63 ||
+      weatherCode === 65 ||
+      weatherCode === 66 ||
+      weatherCode === 67 ||
+      weatherCode === 80 ||
+      weatherCode === 81 ||
+      weatherCode == 82
+    ) {
+      iconPath = "./assets/images/icon-rain.webp";
+    } else if (
+      weatherCode === 71 ||
+      weatherCode === 73 ||
+      weatherCode === 75 ||
+      weatherCode === 77 ||
+      weatherCode === 85 ||
+      weatherCode === 86
+    ) {
+      iconPath = "./assets/images/icon-snow.webp";
+    } else if (weatherCode === 95 || weatherCode === 96 || weatherCode === 99) {
+      iconPath = "./assets/images/icon-storm.webp";
+    }
+
+    return iconPath;
+  }
+
   function update(city, country, weather) {
     let cityDisplay = `${city}, ${country}`;
     let dateDisplay = dateAndTime();
@@ -285,6 +335,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     currentHumidity.textContent = weather.current.relative_humidity_2m;
     currentWind.textContent = weather.current.wind_speed_10m;
     currentPrecipitation.textContent = weather.current.precipitation;
+    currentIcon.setAttribute(
+      "src",
+      String(iconPathFinder(weather.current.weather_code)),
+    );
 
     if (unit === "fahrenheit") {
       currentWindUnit.textContent = "mph";
@@ -300,6 +354,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     dailyForecastDayName5.textContent = dayNames[(todayIndex + 4) % 7];
     dailyForecastDayName6.textContent = dayNames[(todayIndex + 5) % 7];
     dailyForecastDayName7.textContent = dayNames[(todayIndex + 6) % 7];
+
+    dailyForecastIcon1.setAttribute(
+      "src",
+      String(iconPathFinder(weather.daily.weather_code[0])),
+    );
+    dailyForecastIcon2.setAttribute(
+      "src",
+      String(iconPathFinder(weather.daily.weather_code[1])),
+    );
+    dailyForecastIcon3.setAttribute(
+      "src",
+      String(iconPathFinder(weather.daily.weather_code[2])),
+    );
+    dailyForecastIcon4.setAttribute(
+      "src",
+      String(iconPathFinder(weather.daily.weather_code[3])),
+    );
+    dailyForecastIcon5.setAttribute(
+      "src",
+      String(iconPathFinder(weather.daily.weather_code[4])),
+    );
+    dailyForecastIcon6.setAttribute(
+      "src",
+      String(iconPathFinder(weather.daily.weather_code[5])),
+    );
+    dailyForecastIcon7.setAttribute(
+      "src",
+      String(iconPathFinder(weather.daily.weather_code[6])),
+    );
 
     dailyForecastTempHigh1.textContent = weather.daily.temperature_2m_max[0];
     dailyForecastTempHigh2.textContent = weather.daily.temperature_2m_max[1];
@@ -361,6 +444,39 @@ document.addEventListener("DOMContentLoaded", async () => {
     hourlyForecastTemp6.textContent = weather.hourly.temperature_2m[5];
     hourlyForecastTemp7.textContent = weather.hourly.temperature_2m[6];
     hourlyForecastTemp8.textContent = weather.hourly.temperature_2m[7];
+
+    hourlyForecastIcon1.setAttribute(
+      "src",
+      String(iconPathFinder(weather.hourly.weather_code[0])),
+    );
+    hourlyForecastIcon2.setAttribute(
+      "src",
+      String(iconPathFinder(weather.hourly.weather_code[1])),
+    );
+    hourlyForecastIcon3.setAttribute(
+      "src",
+      String(iconPathFinder(weather.hourly.weather_code[2])),
+    );
+    hourlyForecastIcon4.setAttribute(
+      "src",
+      String(iconPathFinder(weather.hourly.weather_code[3])),
+    );
+    hourlyForecastIcon5.setAttribute(
+      "src",
+      String(iconPathFinder(weather.hourly.weather_code[4])),
+    );
+    hourlyForecastIcon6.setAttribute(
+      "src",
+      String(iconPathFinder(weather.hourly.weather_code[5])),
+    );
+    hourlyForecastIcon7.setAttribute(
+      "src",
+      String(iconPathFinder(weather.hourly.weather_code[6])),
+    );
+    hourlyForecastIcon8.setAttribute(
+      "src",
+      String(iconPathFinder(weather.hourly.weather_code[7])),
+    );
   }
 
   searchButton.addEventListener("click", async () => {
