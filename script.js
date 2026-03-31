@@ -436,14 +436,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     hourlyForecastTime7.textContent = hourlyTime[(currentHour + 6) % 24];
     hourlyForecastTime8.textContent = hourlyTime[(currentHour + 7) % 24];
 
-    hourlyForecastTemp1.textContent = weather.hourly.temperature_2m[0];
-    hourlyForecastTemp2.textContent = weather.hourly.temperature_2m[1];
-    hourlyForecastTemp3.textContent = weather.hourly.temperature_2m[2];
-    hourlyForecastTemp4.textContent = weather.hourly.temperature_2m[3];
-    hourlyForecastTemp5.textContent = weather.hourly.temperature_2m[4];
-    hourlyForecastTemp6.textContent = weather.hourly.temperature_2m[5];
-    hourlyForecastTemp7.textContent = weather.hourly.temperature_2m[6];
-    hourlyForecastTemp8.textContent = weather.hourly.temperature_2m[7];
+    hourlyForecastTemp1.textContent =
+      weather.hourly.temperature_2m[currentHour % 24];
+    hourlyForecastTemp2.textContent =
+      weather.hourly.temperature_2m[(currentHour + 1) % 24];
+    hourlyForecastTemp3.textContent =
+      weather.hourly.temperature_2m[(currentHour + 2) % 24];
+    hourlyForecastTemp4.textContent =
+      weather.hourly.temperature_2m[(currentHour + 3) % 24];
+    hourlyForecastTemp5.textContent =
+      weather.hourly.temperature_2m[(currentHour + 4) % 24];
+    hourlyForecastTemp6.textContent =
+      weather.hourly.temperature_2m[(currentHour + 5) % 24];
+    hourlyForecastTemp7.textContent =
+      weather.hourly.temperature_2m[(currentHour + 6) % 24];
+    hourlyForecastTemp8.textContent =
+      weather.hourly.temperature_2m[(currentHour + 7) % 24];
 
     hourlyForecastIcon1.setAttribute(
       "src",
